@@ -30,6 +30,9 @@ class AuthServiceTest {
   @Mock
   private PasswordEncoder passwordEncoder;
 
+  @Mock
+  private JWTService jwtService;
+
   @InjectMocks
   private AuthService authService;
 
@@ -42,12 +45,14 @@ class AuthServiceTest {
     when(userRepository.existsByUsername("max")).thenReturn(false);
     when(passwordEncoder.encode("password123")).thenReturn("hashed-password");
     when(userRepository.save(any(User.class))).thenReturn(savedUser);
+    when(jwtService.generateToken(savedUser)).thenReturn("fake-jwt-token");
 
     AuthResponse response = authService.register(request);
 
     assertThat(response.userId()).isEqualTo(1L);
     assertThat(response.username()).isEqualTo("max");
     assertThat(response.message()).isEqualTo("Registration successful");
+    assertThat(response.token()).isEqualTo("fake-jwt-token");
 
     verify(userRepository).existsByUsername("max");
     verify(passwordEncoder).encode("password123");
