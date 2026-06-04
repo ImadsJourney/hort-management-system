@@ -20,7 +20,7 @@ public class HortGroupService {
   public HortGroupResponse createGroup(CreateHortGroupRequest request) {
     HortGroup group = HortGroup.builder()
         .name(request.name())
-        .gradeLevel(request.name())
+        .gradeLevel(request.gradeLevel())
         .supervisorName(request.supervisorName())
         .build();
 

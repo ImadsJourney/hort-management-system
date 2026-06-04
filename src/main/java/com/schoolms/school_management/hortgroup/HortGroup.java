@@ -37,4 +37,20 @@ public class HortGroup {
     return supervisorName;
   }
 
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setGradeLevel(String gradeLevel) {
+    this.gradeLevel = gradeLevel;
+  }
+
+  public void setSupervisorName(String supervisorName) {
+    this.supervisorName = supervisorName;
+  }
+
 }

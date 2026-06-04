@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -54,5 +53,53 @@ public class Child {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "hort_group_id", nullable = false)
   private HortGroup hortGroup;
+
+  public Long getId() {
+    return id;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public AttendanceStatus getAttendanceStatus() {
+    return attendanceStatus;
+  }
+
+  public String getNotes() {
+    return notes;
+  }
+
+  public HortGroup getHortGroup() {
+    return hortGroup;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public void setAttendanceStatus(AttendanceStatus attendanceStatus) {
+    this.attendanceStatus = attendanceStatus;
+  }
+
+  public void setNotes(String notes) {
+    this.notes = notes;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public void setHortGroup(HortGroup hortGroup) {
+    this.hortGroup = hortGroup;
+  }
 
 }

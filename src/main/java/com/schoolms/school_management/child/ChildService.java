@@ -2,10 +2,13 @@ package com.schoolms.school_management.child;
 
 import com.schoolms.school_management.child.dto.ChildResponse;
 import com.schoolms.school_management.child.dto.CreateChildRequest;
+import com.schoolms.school_management.child.dto.UpdateAttendanceRequest;
+import com.schoolms.school_management.child.dto.UpdateNotesRequest;
 import com.schoolms.school_management.hortgroup.HortGroup;
 import com.schoolms.school_management.hortgroup.HortGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -60,5 +63,27 @@ public class ChildService {
         child.getNotes(),
         child.getHortGroup().getId(),
         child.getHortGroup().getName());
+  }
+
+  public ChildResponse updateAttendance(Long childId, UpdateAttendanceRequest request) {
+    Child child = childRepository.findById(childId).orElseThrow(
+        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child not found."));
+
+    child.setAttendanceStatus(request.attendanceStatus());
+
+    Child savedChild = childRepository.save(child);
+
+    return toChildResponse(savedChild);
+  }
+
+  public ChildResponse updateNotes(Long childId, UpdateNotesRequest request) {
+    Child child = childRepository.findById(childId).orElseThrow(
+        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child not found."));
+
+    child.setNotes(request.notes());
+
+    Child savedChild = childRepository.save(child);
+
+    return toChildResponse(savedChild);
   }
 }
