@@ -86,7 +86,11 @@ POSTGRES_DB=schooldb
 JWT_SECRET=replace-with-your-own-long-secret-key
 ```
 
-The `.env` file contains local secrets and must not be committed.
+The `.env` file contains local secrets and cannot be commmited.
+So if you are cloning, set up your own secret key with: 
+```bash
+openssl rand -base64 32
+```
 
 ## Run with Docker Compose
 
@@ -241,32 +245,3 @@ The workflow:
 * builds the application
 
 This ensures that every pushed change is automatically verified.
-
-## Development Notes
-
-This project was developed with a focus on clean backend structure, testability and practical deployment.
-
-The main goals were:
-
-* build a real-world Java/Spring backend
-* apply authentication and basic security principles
-* use PostgreSQL as persistent storage
-* write automated tests
-* containerize the application
-* provide a reproducible setup with Docker Compose
-* document the application from a developer and user perspective
-
-## Future Improvements
-
-Possible next steps:
-
-* React or Vue frontend
-* role-based authorization
-* attendance history per day
-* integration tests with Testcontainers
-* OpenAPI / Swagger documentation
-* production-ready secret management
-* deployment pipeline
-
-```
-```
