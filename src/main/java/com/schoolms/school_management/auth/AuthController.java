@@ -12,16 +12,18 @@ import com.schoolms.school_management.auth.dto.LoginRequest;
 import com.schoolms.school_management.auth.dto.RegisterRequest;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 /**
  * AuthController
  */
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController {
   private final AuthService authService;
+
+  public AuthController(AuthService authService) {
+    this.authService = authService;
+  }
 
   @PostMapping("/register")
   @ResponseStatus(HttpStatus.CREATED)
