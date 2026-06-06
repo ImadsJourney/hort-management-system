@@ -1,26 +1,42 @@
-
 # Hort Manager
 
-A Spring Boot application for managing daycare / after-school care groups, children, attendance status and notes.
+Hort Manager is a full-stack web application for managing after-school care groups, children, attendance status and child notes.
 
-The project was built as a practical backend application for a real school/daycare context. The goal is to provide teachers and educators with a simple system to manage groups, children and daily attendance information.
+It was created after a teacher colleague described the need for a better way to manage daycare groups, children, attendance and notes instead of relying on Excel spreadsheets. The project provides a simple full-stack web application for educators to organize this information in one central system.
+
+![Login screen](docs/screenshots/login.png)
+
+
+![Dashboard](docs/screenshots/Dashboard.png)
+
+
+![Dashboard2](docs/screenshots/DashboardHort2.png)
 
 ## Features
 
 * User registration and login
 * JWT-based authentication
 * Password hashing with BCrypt
-* Group management for daycare/school groups
-* Child management per group
+* Group management
+* Child management
 * Attendance status tracking
 * Notes for individual children
+* Search function for children
+* Overview card showing the total number of children
 * PostgreSQL persistence
 * REST API with validation
+* React + TypeScript frontend
+* Docker Compose setup
 * Unit and controller tests
-* Docker Compose setup for backend and database
-* GitHub Actions CI workflow for automated build and tests
+* GitHub Actions CI workflow
+
+
+
+
 
 ## Tech Stack
+
+### Backend
 
 * Java 21
 * Spring Boot
@@ -36,15 +52,43 @@ The project was built as a practical backend application for a real school/dayca
 * Docker Compose
 * GitHub Actions
 
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* CSS
+* Fetch API
+
 ## Project Structure
 
 ```text
-src/main/java/com/schoolms/school_management
-├── auth        # Registration, login and JWT generation
-├── child       # Child management, attendance and notes
-├── config      # Security configuration
-├── hortgroup   # Group management
-└── user        # User entity and repository
+.
+├── frontend
+│   ├── src
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   ├── api.ts
+│   │   └── types.ts
+│   └── package.json
+│
+├── src/main/java/com/schoolms/school_management
+│   ├── auth        # Registration, login and JWT generation
+│   ├── child       # Child management, attendance and notes
+│   ├── common      # Shared helpers / health endpoint
+│   ├── config      # Security configuration
+│   ├── hortgroup   # Group management
+│   └── user        # User entity and repository
+│
+├── src/test/java/com/schoolms/school_management
+│   ├── auth
+│   ├── child
+│   └── group
+│
+├── docker-compose.yml
+├── Dockerfile
+├── pom.xml
+└── README.md
 ```
 
 ## Security
@@ -59,7 +103,7 @@ POST /auth/login
 GET  /health
 ```
 
-All other endpoints require a valid JWT Bearer Token:
+All other protected endpoints require a valid JWT Bearer Token:
 
 ```http
 Authorization: Bearer <token>
@@ -86,15 +130,17 @@ POSTGRES_DB=schooldb
 JWT_SECRET=replace-with-your-own-long-secret-key
 ```
 
-The `.env` file contains local secrets and cannot be commmited.
-So if you are cloning, set up your own secret key with: 
+Generate a local JWT secret:
+
 ```bash
 openssl rand -base64 32
 ```
 
-## Run with Docker Compose
+The `.env` file contains local secrets and must not be committed.
 
-Start the complete application including PostgreSQL:
+## Run the Backend with Docker Compose
+
+Start the backend and PostgreSQL database:
 
 ```bash
 docker compose up -d --build
@@ -118,13 +164,41 @@ Stop the containers and remove the database volume:
 docker compose down -v
 ```
 
+## Run the Frontend
+
+Go into the frontend directory:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the Vite development server:
+
+```bash
+npm run dev
+```
+
+The frontend will usually be available at:
+
+```text
+http://localhost:5173
+```
+
 ## Run Tests
+
+Using the Maven wrapper:
 
 ```bash
 ./mvnw test
 ```
 
-Or, if Maven is installed locally:
+Or with local Maven:
 
 ```bash
 mvn test
@@ -134,6 +208,19 @@ mvn test
 
 ```bash
 ./mvnw clean package
+```
+
+Or:
+
+```bash
+mvn clean package
+```
+
+## Frontend Build
+
+```bash
+cd frontend
+npm run build
 ```
 
 ## API Examples
@@ -162,59 +249,16 @@ The response contains a JWT token.
 set TOKEN "paste-token-here"
 ```
 
-### Create Group
+### Store Token in Bash/Zsh
 
 ```bash
-curl -X POST http://localhost:8080/groups \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{"name":"Bärengruppe","gradeLevel":"1. Klasse","supervisorName":"Frau Müller"}'
+export TOKEN="paste-token-here"
 ```
 
-### Get Groups
-
-```bash
-curl http://localhost:8080/groups \
-  -H "Authorization: Bearer <token>"
-```
-
-### Create Child
-
-```bash
-curl -X POST http://localhost:8080/children \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{"firstName":"Ali","lastName":"Yilmaz","notes":"Darf alleine nach Hause gehen.","hortGroupId":1}'
-```
-
-### Get Children
-
-```bash
-curl http://localhost:8080/children \
-  -H "Authorization: Bearer <token>"
-```
-
-### Update Attendance
-
-```bash
-curl -X PATCH http://localhost:8080/children/1/attendance \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{"attendanceStatus":"PRESENT"}'
-```
-
-### Update Notes
-
-```bash
-curl -X PATCH http://localhost:8080/children/1/notes \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{"notes":"Wurde um 15:30 Uhr abgeholt."}'
-```
 
 ## Testing Approach
 
-The project contains tests for controller and service layers.
+The project contains tests for the controller and service layers.
 
 Examples:
 
@@ -234,7 +278,7 @@ The tests focus on:
 
 ## CI/CD
 
-The project includes a GitHub Actions workflow that automatically runs on push and pull requests.
+The project includes a GitHub Actions workflow that runs automatically on push and pull requests.
 
 The workflow:
 
@@ -244,4 +288,14 @@ The workflow:
 * runs tests
 * builds the application
 
-This ensures that every pushed change is automatically verified.
+This ensures that pushed changes are automatically verified.
+
+## Possible Future Improvements
+
+* Edit and delete groups
+* Edit and delete children
+* Filter children by group
+* Add role-based authorization
+* Improve error handling in the frontend
+* Add integration tests with Testcontainers
+* Add production deployment configuration
